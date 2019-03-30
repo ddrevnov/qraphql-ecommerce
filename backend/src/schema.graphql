@@ -1,0 +1,19 @@
+# import * from './generated/prisma-client/prisma.graphql'
+
+scalar Upload
+
+input ItemCreateInput {
+  title: String!
+  description: String!
+  image: Upload
+  price: Int!
+}
+
+type Query {
+  items: [Item!]!
+}
+
+type Mutation {
+  createItem(data: ItemCreateInput!): Item!
+  updateItem(data: ItemUpdateInput!, where: ItemWhereUniqueInput!): Item!
+}
