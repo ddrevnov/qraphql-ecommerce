@@ -1,11 +1,11 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Query } from 'react-apollo';
 import gql from 'graphql-tag';
 import { Spin, Alert, Row, Col } from 'antd';
 import { Typography } from 'antd';
 
-import { IItem } from '../../interfaces';
-import Item from './Item';
+import { IItem } from '../interfaces';
+import Item from '../components/Item';
 
 const { Title } = Typography;
 
@@ -21,14 +21,15 @@ export const ALL_ITEMS_QUERY = gql`
   }
 `;
 
-const Items = () => {
+export const ItemsPage = () => {
   return (
     <div>
       <Title>Items</Title>
       <Query query={ALL_ITEMS_QUERY}>
         {({ data, error, loading }) => {
           if (loading) return <Spin />;
-          if (error) return <Alert message="Error Text" type="error" />;
+          if (error)
+            return <Alert message="Could not load data" type="error" />;
           return (
             <Row gutter={16}>
               {data.items.map((item: IItem) => (
@@ -43,5 +44,3 @@ const Items = () => {
     </div>
   );
 };
-
-export default Items;

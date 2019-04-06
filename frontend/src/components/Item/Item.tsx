@@ -1,10 +1,10 @@
 import React from 'react';
 import { Card } from 'antd';
 import { Link } from 'react-router-dom';
+import styled from 'styled-components';
 
 import { IItem } from '../../interfaces';
 import { ENDPOINT } from '../../config';
-import styled from 'styled-components';
 
 interface Props extends IItem {}
 

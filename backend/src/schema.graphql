@@ -2,6 +2,16 @@
 
 scalar Upload
 
+type Query {
+  items: [Item!]!
+  item(where: ItemWhereUniqueInput!): Item
+}
+
+type Mutation {
+  createItem(data: ItemCreateInput!): Item!
+  updateItem(data: ItemUpdateInput!, where: ItemWhereUniqueInput!): Item!
+}
+
 input ItemCreateInput {
   title: String!
   description: String!
@@ -9,11 +19,9 @@ input ItemCreateInput {
   price: Int!
 }
 
-type Query {
-  items: [Item!]!
-}
-
-type Mutation {
-  createItem(data: ItemCreateInput!): Item!
-  updateItem(data: ItemUpdateInput!, where: ItemWhereUniqueInput!): Item!
+input ItemUpdateInput {
+  title: String
+  description: String
+  image: Upload
+  price: Int
 }

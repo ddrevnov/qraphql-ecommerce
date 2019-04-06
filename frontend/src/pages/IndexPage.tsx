@@ -3,8 +3,6 @@ import { Typography } from 'antd';
 
 const { Title } = Typography;
 
-const Index = () => {
+export const IndexPage = () => {
   return <Title>Home</Title>;
 };
-
-export default Index;

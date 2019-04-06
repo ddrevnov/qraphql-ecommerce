@@ -19,8 +19,8 @@ const Header: React.FC<RouteComponentProps> = ({ location }) => {
         <Menu.Item key="/items">
           <NavLink to="/items">Items</NavLink>
         </Menu.Item>
-        <Menu.Item key="/sell">
-          <NavLink to="/sell">Sell</NavLink>
+        <Menu.Item key="/admin">
+          <NavLink to="/admin">Admin</NavLink>
         </Menu.Item>
       </Menu>
     </Layout.Header>

@@ -1,15 +1,14 @@
 import React from 'react';
 import { Switch, Route } from 'react-router-dom';
-import Index from './components/Index';
-import Items from './components/Items';
-import Sell from './components/Sell';
+import { IndexPage, ItemsPage, ItemPage, AdminPage } from './pages';
 
 const Router = () => {
   return (
     <Switch>
-      <Route path="/" exact component={Index} />
-      <Route path="/items" component={Items} />
-      <Route path="/sell" component={Sell} />
+      <Route path="/" exact component={IndexPage} />
+      <Route path="/items" exact component={ItemsPage} />
+      <Route path="/items/:id" exact component={ItemPage} />
+      <Route path="/admin" component={AdminPage} />
     </Switch>
   );
 };
