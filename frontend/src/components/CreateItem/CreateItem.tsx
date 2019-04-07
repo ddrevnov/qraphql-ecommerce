@@ -2,12 +2,12 @@ import React, { Fragment } from 'react';
 import { Form, Alert, Typography } from 'antd';
 import { UploadFile } from 'antd/lib/upload/interface';
 import { FormComponentProps } from 'antd/lib/form';
-import gql from 'graphql-tag';
 import { Mutation, compose } from 'react-apollo';
 import { withRouter, RouteComponentProps } from 'react-router';
 
 import { IItem } from '../../interfaces';
 import ItemForm from '../ItemForm';
+import { CREATE_ITEM_MUTATION } from '../../shared/queries';
 
 const { Title } = Typography;
 
@@ -20,26 +20,6 @@ interface Props extends FormComponentProps, RouteComponentProps {}
 interface IItemCreateMutation {
   createItem: IItem;
 }
-
-export const CREATE_ITEM_MUTATION = gql`
-  mutation CREATE_ITEM_MUTATION(
-    $title: String!
-    $description: String!
-    $price: Int!
-    $image: Upload
-  ) {
-    createItem(
-      data: {
-        title: $title
-        description: $description
-        price: $price
-        image: $image
-      }
-    ) {
-      id
-    }
-  }
-`;
 
 const CreateItem: React.FC<Props> = ({ form, history }) => {
   const initialItemData = {

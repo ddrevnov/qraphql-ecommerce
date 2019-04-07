@@ -6,20 +6,9 @@ import { Typography } from 'antd';
 
 import { IItem } from '../interfaces';
 import Item from '../components/Item';
+import { ALL_ITEMS_QUERY } from '../shared/queries';
 
 const { Title } = Typography;
-
-export const ALL_ITEMS_QUERY = gql`
-  query ALL_ITEMS_QUERY {
-    items {
-      id
-      title
-      price
-      description
-      image
-    }
-  }
-`;
 
 export const ItemsPage = () => {
   return (
@@ -32,11 +21,13 @@ export const ItemsPage = () => {
             return <Alert message="Could not load data" type="error" />;
           return (
             <Row gutter={16}>
-              {data.items.map((item: IItem) => (
-                <Col span={8} key={item.id}>
-                  <Item {...item} />
-                </Col>
-              ))}
+              {!!data.items.length &&
+                data.items.map((item: IItem) => (
+                  <Col span={8} key={item.id}>
+                    <Item {...item} />
+                  </Col>
+                ))}
+              {!data.items.length && <div>Nothing</div>}
             </Row>
           );
         }}

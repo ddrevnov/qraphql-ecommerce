@@ -2,12 +2,12 @@ import React, { Fragment } from 'react';
 import { Form, Alert, Typography } from 'antd';
 import { UploadFile } from 'antd/lib/upload/interface';
 import { FormComponentProps } from 'antd/lib/form';
-import gql from 'graphql-tag';
 import { Mutation, compose, Query } from 'react-apollo';
 import { withRouter, RouteComponentProps } from 'react-router';
 
 import { IItem } from '../../interfaces';
 import ItemForm from '../ItemForm';
+import { ITEM_QUERY, UPDATE_ITEM_MUTATION } from '../../shared/queries';
 
 interface IFormData extends Omit<IItem, 'image'> {
   image: UploadFile[];
@@ -26,44 +26,6 @@ interface IProps
 interface IItemQuery {
   item: IItem;
 }
-
-export const UPDATE_ITEM_MUTATION = gql`
-  mutation UPDATE_ITEM_MUTATION(
-    $id: ID!
-    $title: String
-    $description: String
-    $price: Int
-    $image: Upload
-  ) {
-    updateItem(
-      data: {
-        title: $title
-        description: $description
-        price: $price
-        image: $image
-      }
-      where: { id: $id }
-    ) {
-      id
-      title
-      description
-      price
-      image
-    }
-  }
-`;
-
-export const GET_ITEM_QUERY = gql`
-  query GET_ITEM_QUERY($id: ID!) {
-    item(where: { id: $id }) {
-      id
-      title
-      description
-      price
-      image
-    }
-  }
-`;
 
 const UpdateItem: React.FC<IProps> = ({ form, history, match }) => {
   const handleSubmit = (updateItem: any) => (e: React.FormEvent) => {
@@ -88,10 +50,7 @@ const UpdateItem: React.FC<IProps> = ({ form, history, match }) => {
   };
 
   return (
-    <Query<IItemQuery>
-      query={GET_ITEM_QUERY}
-      variables={{ id: match.params.id }}
-    >
+    <Query<IItemQuery> query={ITEM_QUERY} variables={{ id: match.params.id }}>
       {({ data, error, loading: loadingQuery }) => (
         <Mutation mutation={UPDATE_ITEM_MUTATION}>
           {(updateItem, { loading, error }) => (

@@ -30,6 +30,10 @@ const Mutation = {
   ): Promise<Item> {
     const item = await db.mutation.updateItem({ data, where }, info);
     return item;
+  },
+  async deleteItem(parent, { where }, { db }: Context, info): Promise<Item> {
+    const item = await db.mutation.deleteItem({ where }, info);
+    return item;
   }
 };
 
