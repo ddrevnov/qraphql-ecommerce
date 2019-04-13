@@ -3,14 +3,22 @@
 scalar Upload
 
 type Query {
-  items: [Item!]!
+  items(
+    where: ItemWhereInput
+    orderBy: ItemOrderByInput
+    skip: Int
+    first: Int
+  ): [Item!]!
   item(where: ItemWhereUniqueInput!): Item
+  itemsConnection(where: ItemWhereInput): ItemConnection!
+  users(where: UserWhereInput): [User]!
 }
 
 type Mutation {
   createItem(data: ItemCreateInput!): Item!
   updateItem(data: ItemUpdateInput!, where: ItemWhereUniqueInput!): Item!
   deleteItem(where: ItemWhereUniqueInput!): Item
+  signup(email: String!, password: String!, name: String!): User!
 }
 
 input ItemCreateInput {

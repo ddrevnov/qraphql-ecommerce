@@ -3,6 +3,7 @@ dotenv.config();
 import { GraphQLServer } from 'graphql-yoga';
 import * as mkdirp from 'mkdirp';
 import * as express from 'express';
+import * as cookieParser from 'cookie-parser';
 
 import db from './db';
 import resolvers from './resolvers';
@@ -21,6 +22,7 @@ const server = new GraphQLServer({
   })
 });
 
+server.express.use(cookieParser());
 server.express.use('/uploads', express.static('uploads'));
 
 const options = {

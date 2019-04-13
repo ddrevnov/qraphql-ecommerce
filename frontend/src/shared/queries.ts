@@ -1,4 +1,5 @@
 import gql from 'graphql-tag';
+import { perPage } from '../config';
 
 /**
 |--------------------------------------------------
@@ -7,8 +8,8 @@ import gql from 'graphql-tag';
 */
 
 export const ALL_ITEMS_QUERY = gql`
-  query ALL_ITEMS_QUERY {
-    items {
+  query ALL_ITEMS_QUERY($skip: Int = 0, $first: Int = ${perPage}) {
+    items(first: $first, skip: $skip, orderBy: createdAt_DESC) {
       id
       title
       price
@@ -26,6 +27,16 @@ export const ITEM_QUERY = gql`
       price
       description
       image
+    }
+  }
+`;
+
+export const PAGINATION_QUERY = gql`
+  query PAGINATION_QUERY {
+    itemsConnection {
+      aggregate {
+        count
+      }
     }
   }
 `;
@@ -89,6 +100,14 @@ export const CREATE_ITEM_MUTATION = gql`
         image: $image
       }
     ) {
+      id
+    }
+  }
+`;
+
+export const SIGNUP_USER = gql`
+  mutation SIGNUP_USER($email: String!, $name: String!, $password: String!) {
+    signup(email: $email, name: $name, password: $password) {
       id
     }
   }
