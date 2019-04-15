@@ -1,7 +1,6 @@
 import * as bcrypt from 'bcryptjs';
-import * as jwt from 'jsonwebtoken';
 
-import { FileUpload, Context } from '../utils';
+import { FileUpload, Context, auth } from '../utils';
 import { Item, User } from '../generated/prisma-client';
 
 const Mutation = {
@@ -38,7 +37,7 @@ const Mutation = {
     const item = await db.mutation.deleteItem({ where }, info);
     return item;
   },
-  async signup(
+  async signUp(
     parent,
     { email, password, name },
     { db, response }: Context,
@@ -57,16 +56,41 @@ const Mutation = {
       info
     );
 
-    console.log({ user });
-
-    const token = jwt.sign({ userId: user.id }, process.env.APP_SECRET);
-
-    response.cookie('token', token, {
-      httpOnly: true,
-      maxAge: 1000 * 60 * 60 * 24 * 365 // 1 year cookie
-    });
+    const token = auth.generateToken(user.id);
+    auth.setCookie(response, token);
 
     return user;
+  },
+  async signIn(
+    parent,
+    { email, password },
+    { db, response }: Context,
+    info
+  ): Promise<User> {
+    const user = await db.query.user({
+      where: {
+        email
+      }
+    });
+
+    if (!user) {
+      throw new Error(`No such user found for email ${email}`);
+    }
+
+    const valid = await bcrypt.compare(password, user.password);
+
+    if (!valid) {
+      throw new Error('Invalid password');
+    }
+
+    const token = auth.generateToken(user.id);
+    auth.setCookie(response, token);
+
+    return user;
+  },
+  signOut(parent, args, { response }: Context) {
+    response.clearCookie('token');
+    return { message: 'Goodbye!' };
   }
 };
 

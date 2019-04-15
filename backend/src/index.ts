@@ -4,6 +4,7 @@ import { GraphQLServer } from 'graphql-yoga';
 import * as mkdirp from 'mkdirp';
 import * as express from 'express';
 import * as cookieParser from 'cookie-parser';
+import * as jwt from 'jsonwebtoken';
 
 import db from './db';
 import resolvers from './resolvers';
@@ -24,6 +25,23 @@ const server = new GraphQLServer({
 
 server.express.use(cookieParser());
 server.express.use('/uploads', express.static('uploads'));
+
+server.express.use((req: any, res, next) => {
+  let { token } = req.cookies;
+
+  if (token) {
+    token = token.replace('Bearer ', '');
+    const { userId } = jwt.verify(token, process.env.APP_SECRET) as {
+      userId: string;
+    };
+
+    if (userId) {
+      req.userId = userId;
+    }
+  }
+
+  next();
+});
 
 const options = {
   port: process.env.PORT,

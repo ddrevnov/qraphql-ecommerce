@@ -3,7 +3,7 @@ import { Mutation, compose } from 'react-apollo';
 import { Alert, Typography, Form, Button, Input, message } from 'antd';
 
 import { IUser } from '../interfaces';
-import { SIGNUP_USER, CURRENT_USER_QUERY } from '../shared/queries';
+import { SIGNIN_USER, CURRENT_USER_QUERY } from '../shared/queries';
 import { FormComponentProps } from 'antd/lib/form';
 import { withRouter, RouteComponentProps } from 'react-router';
 
@@ -11,11 +11,11 @@ const { Title } = Typography;
 
 interface IProps extends FormComponentProps, RouteComponentProps {}
 
-interface ISignupMutation {
-  signup: IUser;
+interface ISigninMutation {
+  signin: IUser;
 }
 
-const SignUp: React.FC<IProps> = ({ form, history }) => {
+const SignIn: React.FC<IProps> = ({ form, history }) => {
   const submit = (createUser: any) => (e: React.FormEvent) => {
     e.preventDefault();
     form.validateFields(async (err, variables) => {
@@ -24,20 +24,20 @@ const SignUp: React.FC<IProps> = ({ form, history }) => {
           variables
         });
 
-        message.success('You are signed up');
+        message.success('You are signed in');
         history.push('/');
       }
     });
   };
 
   return (
-    <Mutation<ISignupMutation>
-      mutation={SIGNUP_USER}
+    <Mutation<ISigninMutation>
+      mutation={SIGNIN_USER}
       refetchQueries={[{ query: CURRENT_USER_QUERY }]}
     >
       {(createUser, { loading, error }) => (
         <Fragment>
-          <Title level={2}>Sign Up</Title>
+          <Title level={2}>Sign In</Title>
           {error && <Alert message="Server Error" type="error" />}
           <Form onSubmit={submit(createUser)}>
             <Form.Item>
@@ -45,12 +45,6 @@ const SignUp: React.FC<IProps> = ({ form, history }) => {
                 rules: [{ required: true, message: 'Please input an email!' }],
                 initialValue: ''
               })(<Input placeholder="Email" />)}
-            </Form.Item>
-            <Form.Item>
-              {form.getFieldDecorator('name', {
-                rules: [{ required: true, message: 'Please input a name!' }],
-                initialValue: ''
-              })(<Input placeholder="Name" />)}
             </Form.Item>
             <Form.Item>
               {form.getFieldDecorator('password', {
@@ -66,7 +60,7 @@ const SignUp: React.FC<IProps> = ({ form, history }) => {
               type="primary"
               htmlType="submit"
             >
-              Sign Up
+              Sign In
             </Button>
           </Form>
         </Fragment>
@@ -80,6 +74,6 @@ const enhance = compose(
   Form.create()
 );
 
-const SignupPage = enhance(SignUp);
+const SigninPage = enhance(SignIn);
 
-export { SignupPage };
+export { SigninPage };

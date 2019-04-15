@@ -12,13 +12,21 @@ type Query {
   item(where: ItemWhereUniqueInput!): Item
   itemsConnection(where: ItemWhereInput): ItemConnection!
   users(where: UserWhereInput): [User]!
+  user(where: UserWhereUniqueInput!): User
+  me: User
 }
 
 type Mutation {
   createItem(data: ItemCreateInput!): Item!
   updateItem(data: ItemUpdateInput!, where: ItemWhereUniqueInput!): Item!
   deleteItem(where: ItemWhereUniqueInput!): Item
-  signup(email: String!, password: String!, name: String!): User!
+  signUp(email: String!, password: String!, name: String!): User!
+  signIn(email: String!, password: String!): User!
+  signOut: SuccessMessage
+}
+
+type SuccessMessage {
+  message: String
 }
 
 input ItemCreateInput {
