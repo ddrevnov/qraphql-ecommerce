@@ -211,6 +211,7 @@ type Item {
   description: String!
   image: String
   price: Int!
+  user: User!
 }
 
 type ItemConnection {
@@ -224,6 +225,7 @@ input ItemCreateInput {
   description: String!
   image: String
   price: Int!
+  user: UserCreateOneInput!
 }
 
 input ItemCreateOneInput {
@@ -284,6 +286,7 @@ input ItemUpdateDataInput {
   description: String
   image: String
   price: Int
+  user: UserUpdateOneRequiredInput
 }
 
 input ItemUpdateInput {
@@ -291,6 +294,7 @@ input ItemUpdateInput {
   description: String
   image: String
   price: Int
+  user: UserUpdateOneRequiredInput
 }
 
 input ItemUpdateManyMutationInput {
@@ -379,6 +383,7 @@ input ItemWhereInput {
   price_lte: Int
   price_gt: Int
   price_gte: Int
+  user: UserWhereInput
   AND: [ItemWhereInput!]
   OR: [ItemWhereInput!]
   NOT: [ItemWhereInput!]
@@ -930,8 +935,6 @@ type User {
   name: String!
   email: String!
   password: String!
-  resetToken: String
-  resetTokenExpiry: Float
   permissions: [Permission!]!
   cart(where: CartItemWhereInput, orderBy: CartItemOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [CartItem!]
 }
@@ -946,8 +949,6 @@ input UserCreateInput {
   name: String!
   email: String!
   password: String!
-  resetToken: String
-  resetTokenExpiry: Float
   permissions: UserCreatepermissionsInput
   cart: CartItemCreateManyWithoutUserInput
 }
@@ -970,8 +971,6 @@ input UserCreateWithoutCartInput {
   name: String!
   email: String!
   password: String!
-  resetToken: String
-  resetTokenExpiry: Float
   permissions: UserCreatepermissionsInput
 }
 
@@ -989,10 +988,6 @@ enum UserOrderByInput {
   email_DESC
   password_ASC
   password_DESC
-  resetToken_ASC
-  resetToken_DESC
-  resetTokenExpiry_ASC
-  resetTokenExpiry_DESC
   createdAt_ASC
   createdAt_DESC
   updatedAt_ASC
@@ -1004,8 +999,6 @@ type UserPreviousValues {
   name: String!
   email: String!
   password: String!
-  resetToken: String
-  resetTokenExpiry: Float
   permissions: [Permission!]!
 }
 
@@ -1031,8 +1024,6 @@ input UserUpdateDataInput {
   name: String
   email: String
   password: String
-  resetToken: String
-  resetTokenExpiry: Float
   permissions: UserUpdatepermissionsInput
   cart: CartItemUpdateManyWithoutUserInput
 }
@@ -1041,8 +1032,6 @@ input UserUpdateInput {
   name: String
   email: String
   password: String
-  resetToken: String
-  resetTokenExpiry: Float
   permissions: UserUpdatepermissionsInput
   cart: CartItemUpdateManyWithoutUserInput
 }
@@ -1051,8 +1040,6 @@ input UserUpdateManyMutationInput {
   name: String
   email: String
   password: String
-  resetToken: String
-  resetTokenExpiry: Float
   permissions: UserUpdatepermissionsInput
 }
 
@@ -1087,8 +1074,6 @@ input UserUpdateWithoutCartDataInput {
   name: String
   email: String
   password: String
-  resetToken: String
-  resetTokenExpiry: Float
   permissions: UserUpdatepermissionsInput
 }
 
@@ -1159,28 +1144,6 @@ input UserWhereInput {
   password_not_starts_with: String
   password_ends_with: String
   password_not_ends_with: String
-  resetToken: String
-  resetToken_not: String
-  resetToken_in: [String!]
-  resetToken_not_in: [String!]
-  resetToken_lt: String
-  resetToken_lte: String
-  resetToken_gt: String
-  resetToken_gte: String
-  resetToken_contains: String
-  resetToken_not_contains: String
-  resetToken_starts_with: String
-  resetToken_not_starts_with: String
-  resetToken_ends_with: String
-  resetToken_not_ends_with: String
-  resetTokenExpiry: Float
-  resetTokenExpiry_not: Float
-  resetTokenExpiry_in: [Float!]
-  resetTokenExpiry_not_in: [Float!]
-  resetTokenExpiry_lt: Float
-  resetTokenExpiry_lte: Float
-  resetTokenExpiry_gt: Float
-  resetTokenExpiry_gte: Float
   cart_every: CartItemWhereInput
   cart_some: CartItemWhereInput
   cart_none: CartItemWhereInput

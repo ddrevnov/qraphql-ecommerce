@@ -351,10 +351,6 @@ export type UserOrderByInput =
   | "email_DESC"
   | "password_ASC"
   | "password_DESC"
-  | "resetToken_ASC"
-  | "resetToken_DESC"
-  | "resetTokenExpiry_ASC"
-  | "resetTokenExpiry_DESC"
   | "createdAt_ASC"
   | "createdAt_DESC"
   | "updatedAt_ASC"
@@ -461,6 +457,7 @@ export interface ItemWhereInput {
   price_lte?: Int;
   price_gt?: Int;
   price_gte?: Int;
+  user?: UserWhereInput;
   AND?: ItemWhereInput[] | ItemWhereInput;
   OR?: ItemWhereInput[] | ItemWhereInput;
   NOT?: ItemWhereInput[] | ItemWhereInput;
@@ -523,28 +520,6 @@ export interface UserWhereInput {
   password_not_starts_with?: String;
   password_ends_with?: String;
   password_not_ends_with?: String;
-  resetToken?: String;
-  resetToken_not?: String;
-  resetToken_in?: String[] | String;
-  resetToken_not_in?: String[] | String;
-  resetToken_lt?: String;
-  resetToken_lte?: String;
-  resetToken_gt?: String;
-  resetToken_gte?: String;
-  resetToken_contains?: String;
-  resetToken_not_contains?: String;
-  resetToken_starts_with?: String;
-  resetToken_not_starts_with?: String;
-  resetToken_ends_with?: String;
-  resetToken_not_ends_with?: String;
-  resetTokenExpiry?: Float;
-  resetTokenExpiry_not?: Float;
-  resetTokenExpiry_in?: Float[] | Float;
-  resetTokenExpiry_not_in?: Float[] | Float;
-  resetTokenExpiry_lt?: Float;
-  resetTokenExpiry_lte?: Float;
-  resetTokenExpiry_gt?: Float;
-  resetTokenExpiry_gte?: Float;
   cart_every?: CartItemWhereInput;
   cart_some?: CartItemWhereInput;
   cart_none?: CartItemWhereInput;
@@ -727,6 +702,34 @@ export interface ItemCreateInput {
   description: String;
   image?: String;
   price: Int;
+  user: UserCreateOneInput;
+}
+
+export interface UserCreateOneInput {
+  create?: UserCreateInput;
+  connect?: UserWhereUniqueInput;
+}
+
+export interface UserCreateInput {
+  name: String;
+  email: String;
+  password: String;
+  permissions?: UserCreatepermissionsInput;
+  cart?: CartItemCreateManyWithoutUserInput;
+}
+
+export interface UserCreatepermissionsInput {
+  set?: Permission[] | Permission;
+}
+
+export interface CartItemCreateManyWithoutUserInput {
+  create?: CartItemCreateWithoutUserInput[] | CartItemCreateWithoutUserInput;
+  connect?: CartItemWhereUniqueInput[] | CartItemWhereUniqueInput;
+}
+
+export interface CartItemCreateWithoutUserInput {
+  quantity?: Int;
+  item?: ItemCreateOneInput;
 }
 
 export interface UserCreateOneWithoutCartInput {
@@ -738,13 +741,7 @@ export interface UserCreateWithoutCartInput {
   name: String;
   email: String;
   password: String;
-  resetToken?: String;
-  resetTokenExpiry?: Float;
   permissions?: UserCreatepermissionsInput;
-}
-
-export interface UserCreatepermissionsInput {
-  set?: Permission[] | Permission;
 }
 
 export interface CartItemUpdateInput {
@@ -767,147 +764,13 @@ export interface ItemUpdateDataInput {
   description?: String;
   image?: String;
   price?: Int;
-}
-
-export interface ItemUpsertNestedInput {
-  update: ItemUpdateDataInput;
-  create: ItemCreateInput;
-}
-
-export interface UserUpdateOneRequiredWithoutCartInput {
-  create?: UserCreateWithoutCartInput;
-  update?: UserUpdateWithoutCartDataInput;
-  upsert?: UserUpsertWithoutCartInput;
-  connect?: UserWhereUniqueInput;
-}
-
-export interface UserUpdateWithoutCartDataInput {
-  name?: String;
-  email?: String;
-  password?: String;
-  resetToken?: String;
-  resetTokenExpiry?: Float;
-  permissions?: UserUpdatepermissionsInput;
-}
-
-export interface UserUpdatepermissionsInput {
-  set?: Permission[] | Permission;
-}
-
-export interface UserUpsertWithoutCartInput {
-  update: UserUpdateWithoutCartDataInput;
-  create: UserCreateWithoutCartInput;
-}
-
-export interface CartItemUpdateManyMutationInput {
-  quantity?: Int;
-}
-
-export interface ItemUpdateInput {
-  title?: String;
-  description?: String;
-  image?: String;
-  price?: Int;
-}
-
-export interface ItemUpdateManyMutationInput {
-  title?: String;
-  description?: String;
-  image?: String;
-  price?: Int;
-}
-
-export interface OrderCreateInput {
-  items?: OrderItemCreateManyInput;
-  total: Int;
-  user: UserCreateOneInput;
-  charge: String;
-}
-
-export interface OrderItemCreateManyInput {
-  create?: OrderItemCreateInput[] | OrderItemCreateInput;
-  connect?: OrderItemWhereUniqueInput[] | OrderItemWhereUniqueInput;
-}
-
-export interface OrderItemCreateInput {
-  title: String;
-  description: String;
-  image: String;
-  price: Int;
-  quantity?: Int;
-  user?: UserCreateOneInput;
-}
-
-export interface UserCreateOneInput {
-  create?: UserCreateInput;
-  connect?: UserWhereUniqueInput;
-}
-
-export interface UserCreateInput {
-  name: String;
-  email: String;
-  password: String;
-  resetToken?: String;
-  resetTokenExpiry?: Float;
-  permissions?: UserCreatepermissionsInput;
-  cart?: CartItemCreateManyWithoutUserInput;
-}
-
-export interface CartItemCreateManyWithoutUserInput {
-  create?: CartItemCreateWithoutUserInput[] | CartItemCreateWithoutUserInput;
-  connect?: CartItemWhereUniqueInput[] | CartItemWhereUniqueInput;
-}
-
-export interface CartItemCreateWithoutUserInput {
-  quantity?: Int;
-  item?: ItemCreateOneInput;
-}
-
-export interface OrderUpdateInput {
-  items?: OrderItemUpdateManyInput;
-  total?: Int;
   user?: UserUpdateOneRequiredInput;
-  charge?: String;
 }
 
-export interface OrderItemUpdateManyInput {
-  create?: OrderItemCreateInput[] | OrderItemCreateInput;
-  update?:
-    | OrderItemUpdateWithWhereUniqueNestedInput[]
-    | OrderItemUpdateWithWhereUniqueNestedInput;
-  upsert?:
-    | OrderItemUpsertWithWhereUniqueNestedInput[]
-    | OrderItemUpsertWithWhereUniqueNestedInput;
-  delete?: OrderItemWhereUniqueInput[] | OrderItemWhereUniqueInput;
-  connect?: OrderItemWhereUniqueInput[] | OrderItemWhereUniqueInput;
-  set?: OrderItemWhereUniqueInput[] | OrderItemWhereUniqueInput;
-  disconnect?: OrderItemWhereUniqueInput[] | OrderItemWhereUniqueInput;
-  deleteMany?: OrderItemScalarWhereInput[] | OrderItemScalarWhereInput;
-  updateMany?:
-    | OrderItemUpdateManyWithWhereNestedInput[]
-    | OrderItemUpdateManyWithWhereNestedInput;
-}
-
-export interface OrderItemUpdateWithWhereUniqueNestedInput {
-  where: OrderItemWhereUniqueInput;
-  data: OrderItemUpdateDataInput;
-}
-
-export interface OrderItemUpdateDataInput {
-  title?: String;
-  description?: String;
-  image?: String;
-  price?: Int;
-  quantity?: Int;
-  user?: UserUpdateOneInput;
-}
-
-export interface UserUpdateOneInput {
+export interface UserUpdateOneRequiredInput {
   create?: UserCreateInput;
   update?: UserUpdateDataInput;
   upsert?: UserUpsertNestedInput;
-  delete?: Boolean;
-  disconnect?: Boolean;
   connect?: UserWhereUniqueInput;
 }
 
@@ -915,10 +778,12 @@ export interface UserUpdateDataInput {
   name?: String;
   email?: String;
   password?: String;
-  resetToken?: String;
-  resetTokenExpiry?: Float;
   permissions?: UserUpdatepermissionsInput;
   cart?: CartItemUpdateManyWithoutUserInput;
+}
+
+export interface UserUpdatepermissionsInput {
+  set?: Permission[] | Permission;
 }
 
 export interface CartItemUpdateManyWithoutUserInput {
@@ -995,6 +860,118 @@ export interface CartItemUpdateManyDataInput {
 export interface UserUpsertNestedInput {
   update: UserUpdateDataInput;
   create: UserCreateInput;
+}
+
+export interface ItemUpsertNestedInput {
+  update: ItemUpdateDataInput;
+  create: ItemCreateInput;
+}
+
+export interface UserUpdateOneRequiredWithoutCartInput {
+  create?: UserCreateWithoutCartInput;
+  update?: UserUpdateWithoutCartDataInput;
+  upsert?: UserUpsertWithoutCartInput;
+  connect?: UserWhereUniqueInput;
+}
+
+export interface UserUpdateWithoutCartDataInput {
+  name?: String;
+  email?: String;
+  password?: String;
+  permissions?: UserUpdatepermissionsInput;
+}
+
+export interface UserUpsertWithoutCartInput {
+  update: UserUpdateWithoutCartDataInput;
+  create: UserCreateWithoutCartInput;
+}
+
+export interface CartItemUpdateManyMutationInput {
+  quantity?: Int;
+}
+
+export interface ItemUpdateInput {
+  title?: String;
+  description?: String;
+  image?: String;
+  price?: Int;
+  user?: UserUpdateOneRequiredInput;
+}
+
+export interface ItemUpdateManyMutationInput {
+  title?: String;
+  description?: String;
+  image?: String;
+  price?: Int;
+}
+
+export interface OrderCreateInput {
+  items?: OrderItemCreateManyInput;
+  total: Int;
+  user: UserCreateOneInput;
+  charge: String;
+}
+
+export interface OrderItemCreateManyInput {
+  create?: OrderItemCreateInput[] | OrderItemCreateInput;
+  connect?: OrderItemWhereUniqueInput[] | OrderItemWhereUniqueInput;
+}
+
+export interface OrderItemCreateInput {
+  title: String;
+  description: String;
+  image: String;
+  price: Int;
+  quantity?: Int;
+  user?: UserCreateOneInput;
+}
+
+export interface OrderUpdateInput {
+  items?: OrderItemUpdateManyInput;
+  total?: Int;
+  user?: UserUpdateOneRequiredInput;
+  charge?: String;
+}
+
+export interface OrderItemUpdateManyInput {
+  create?: OrderItemCreateInput[] | OrderItemCreateInput;
+  update?:
+    | OrderItemUpdateWithWhereUniqueNestedInput[]
+    | OrderItemUpdateWithWhereUniqueNestedInput;
+  upsert?:
+    | OrderItemUpsertWithWhereUniqueNestedInput[]
+    | OrderItemUpsertWithWhereUniqueNestedInput;
+  delete?: OrderItemWhereUniqueInput[] | OrderItemWhereUniqueInput;
+  connect?: OrderItemWhereUniqueInput[] | OrderItemWhereUniqueInput;
+  set?: OrderItemWhereUniqueInput[] | OrderItemWhereUniqueInput;
+  disconnect?: OrderItemWhereUniqueInput[] | OrderItemWhereUniqueInput;
+  deleteMany?: OrderItemScalarWhereInput[] | OrderItemScalarWhereInput;
+  updateMany?:
+    | OrderItemUpdateManyWithWhereNestedInput[]
+    | OrderItemUpdateManyWithWhereNestedInput;
+}
+
+export interface OrderItemUpdateWithWhereUniqueNestedInput {
+  where: OrderItemWhereUniqueInput;
+  data: OrderItemUpdateDataInput;
+}
+
+export interface OrderItemUpdateDataInput {
+  title?: String;
+  description?: String;
+  image?: String;
+  price?: Int;
+  quantity?: Int;
+  user?: UserUpdateOneInput;
+}
+
+export interface UserUpdateOneInput {
+  create?: UserCreateInput;
+  update?: UserUpdateDataInput;
+  upsert?: UserUpsertNestedInput;
+  delete?: Boolean;
+  disconnect?: Boolean;
+  connect?: UserWhereUniqueInput;
 }
 
 export interface OrderItemUpsertWithWhereUniqueNestedInput {
@@ -1094,13 +1071,6 @@ export interface OrderItemUpdateManyDataInput {
   quantity?: Int;
 }
 
-export interface UserUpdateOneRequiredInput {
-  create?: UserCreateInput;
-  update?: UserUpdateDataInput;
-  upsert?: UserUpsertNestedInput;
-  connect?: UserWhereUniqueInput;
-}
-
 export interface OrderUpdateManyMutationInput {
   total?: Int;
   charge?: String;
@@ -1127,8 +1097,6 @@ export interface UserUpdateInput {
   name?: String;
   email?: String;
   password?: String;
-  resetToken?: String;
-  resetTokenExpiry?: Float;
   permissions?: UserUpdatepermissionsInput;
   cart?: CartItemUpdateManyWithoutUserInput;
 }
@@ -1137,8 +1105,6 @@ export interface UserUpdateManyMutationInput {
   name?: String;
   email?: String;
   password?: String;
-  resetToken?: String;
-  resetTokenExpiry?: Float;
   permissions?: UserUpdatepermissionsInput;
 }
 
@@ -1236,6 +1202,7 @@ export interface ItemPromise extends Promise<Item>, Fragmentable {
   description: () => Promise<String>;
   image: () => Promise<String>;
   price: () => Promise<Int>;
+  user: <T = UserPromise>() => T;
 }
 
 export interface ItemSubscription
@@ -1246,6 +1213,7 @@ export interface ItemSubscription
   description: () => Promise<AsyncIterator<String>>;
   image: () => Promise<AsyncIterator<String>>;
   price: () => Promise<AsyncIterator<Int>>;
+  user: <T = UserSubscription>() => T;
 }
 
 export interface User {
@@ -1253,8 +1221,6 @@ export interface User {
   name: String;
   email: String;
   password: String;
-  resetToken?: String;
-  resetTokenExpiry?: Float;
   permissions: Permission[];
 }
 
@@ -1263,8 +1229,6 @@ export interface UserPromise extends Promise<User>, Fragmentable {
   name: () => Promise<String>;
   email: () => Promise<String>;
   password: () => Promise<String>;
-  resetToken: () => Promise<String>;
-  resetTokenExpiry: () => Promise<Float>;
   permissions: () => Promise<Permission[]>;
   cart: <T = FragmentableArray<CartItem>>(
     args?: {
@@ -1286,8 +1250,6 @@ export interface UserSubscription
   name: () => Promise<AsyncIterator<String>>;
   email: () => Promise<AsyncIterator<String>>;
   password: () => Promise<AsyncIterator<String>>;
-  resetToken: () => Promise<AsyncIterator<String>>;
-  resetTokenExpiry: () => Promise<AsyncIterator<Float>>;
   permissions: () => Promise<AsyncIterator<Permission[]>>;
   cart: <T = Promise<AsyncIterator<CartItemSubscription>>>(
     args?: {
@@ -1932,8 +1894,6 @@ export interface UserPreviousValues {
   name: String;
   email: String;
   password: String;
-  resetToken?: String;
-  resetTokenExpiry?: Float;
   permissions: Permission[];
 }
 
@@ -1944,8 +1904,6 @@ export interface UserPreviousValuesPromise
   name: () => Promise<String>;
   email: () => Promise<String>;
   password: () => Promise<String>;
-  resetToken: () => Promise<String>;
-  resetTokenExpiry: () => Promise<Float>;
   permissions: () => Promise<Permission[]>;
 }
 
@@ -1956,8 +1914,6 @@ export interface UserPreviousValuesSubscription
   name: () => Promise<AsyncIterator<String>>;
   email: () => Promise<AsyncIterator<String>>;
   password: () => Promise<AsyncIterator<String>>;
-  resetToken: () => Promise<AsyncIterator<String>>;
-  resetTokenExpiry: () => Promise<AsyncIterator<Float>>;
   permissions: () => Promise<AsyncIterator<Permission[]>>;
 }
 
@@ -1976,11 +1932,6 @@ export type Int = number;
 The `String` scalar type represents textual data, represented as UTF-8 character sequences. The String type is most often used by GraphQL to represent free-form human-readable text.
 */
 export type String = string;
-
-/*
-The `Float` scalar type represents signed double-precision fractional values as specified by [IEEE 754](http://en.wikipedia.org/wiki/IEEE_floating_point). 
-*/
-export type Float = number;
 
 /*
 The `Boolean` scalar type represents `true` or `false`.

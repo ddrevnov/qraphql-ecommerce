@@ -1,21 +1,18 @@
 import React from 'react';
 import { Menu, Layout, message } from 'antd';
 import { NavLink, withRouter, RouteComponentProps } from 'react-router-dom';
-import { useMutation } from 'react-apollo-hooks';
-import { QueryResult } from 'react-apollo';
 
 import CurrentUser from '../CurrentUser';
-import { SIGNOUT_USER, CURRENT_USER_QUERY } from '../../shared/queries';
+import client from '../../client';
+import { AUTH_TOKEN } from '../../shared/constants';
 
-const Header: React.FC<RouteComponentProps> = ({ location }) => {
-  const signOut = useMutation(SIGNOUT_USER, {
-    refetchQueries: [{ query: CURRENT_USER_QUERY }]
-  });
-
-  const _signOut = async () => {
+const Header: React.FC<RouteComponentProps> = ({ location, history }) => {
+  const _signOut = () => {
     try {
-      await signOut();
+      window.localStorage.removeItem(AUTH_TOKEN);
+      client.resetStore();
       message.success('You are signed out');
+      history.push('/signIn');
     } catch (err) {
       console.error(err);
     }
@@ -23,7 +20,7 @@ const Header: React.FC<RouteComponentProps> = ({ location }) => {
 
   return (
     <CurrentUser>
-      {({ data, error, loading }: QueryResult) => (
+      {({ isLoggedIn }: { isLoggedIn: string }) => (
         <Layout.Header style={{ position: 'fixed', zIndex: 1, width: '100%' }}>
           <Menu
             theme="dark"
@@ -42,19 +39,19 @@ const Header: React.FC<RouteComponentProps> = ({ location }) => {
               <NavLink to="/admin">Admin</NavLink>
             </Menu.Item>
 
-            {!data.me && !loading && (
+            {!isLoggedIn && (
               <Menu.Item key="/signIn">
                 <NavLink to="/signIn">Sign In</NavLink>
               </Menu.Item>
             )}
 
-            {!data.me && !loading && (
+            {!isLoggedIn && (
               <Menu.Item key="/signUp">
                 <NavLink to="/signUp">Sign Up</NavLink>
               </Menu.Item>
             )}
 
-            {data.me && !loading && (
+            {isLoggedIn && (
               <Menu.Item key="signOut" onClick={_signOut}>
                 Sign Out
               </Menu.Item>

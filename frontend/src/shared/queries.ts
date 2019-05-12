@@ -119,9 +119,12 @@ export const CREATE_ITEM_MUTATION = gql`
 export const SIGNUP_USER = gql`
   mutation SIGNUP_USER($email: String!, $name: String!, $password: String!) {
     signUp(email: $email, name: $name, password: $password) {
-      id
-      email
-      name
+      user {
+        id
+        email
+        name
+      }
+      token
     }
   }
 `;
@@ -129,17 +132,12 @@ export const SIGNUP_USER = gql`
 export const SIGNIN_USER = gql`
   mutation SIGNIN_USER($email: String!, $password: String!) {
     signIn(email: $email, password: $password) {
-      id
-      email
-      name
-    }
-  }
-`;
-
-export const SIGNOUT_USER = gql`
-  mutation SIGNOUT_USER {
-    signOut {
-      message
+      user {
+        id
+        email
+        name
+      }
+      token
     }
   }
 `;

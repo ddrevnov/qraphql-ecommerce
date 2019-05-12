@@ -1,11 +1,9 @@
 import * as shortid from 'shortid';
 import { createWriteStream } from 'fs';
+import { UPLOAD_DIR } from '../config';
 
 export default class FileUpload {
-  constructor(
-    private image: any,
-    private uploadDir: string = process.env.UPLOAD_DIR
-  ) {}
+  constructor(private image: any, private uploadDir: string = UPLOAD_DIR) {}
 
   async storeUpload({ stream, filename }): Promise<any> {
     const id = shortid.generate();

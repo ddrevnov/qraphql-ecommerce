@@ -1,15 +1,14 @@
-import * as dotenv from 'dotenv';
-dotenv.config();
 import { GraphQLServer } from 'graphql-yoga';
 import * as mkdirp from 'mkdirp';
 import * as express from 'express';
-import * as cookieParser from 'cookie-parser';
 import * as jwt from 'jsonwebtoken';
 
-import db from './db';
 import resolvers from './resolvers';
+import db from './db';
+import { UPLOAD_DIR, APP_SECRET, PORT, FRONTEND_URL } from './config';
+import { Req } from './utils/Context';
 
-mkdirp.sync(process.env.UPLOAD_DIR);
+mkdirp.sync(UPLOAD_DIR);
 
 const server = new GraphQLServer({
   typeDefs: './src/schema.graphql',
@@ -23,15 +22,14 @@ const server = new GraphQLServer({
   })
 });
 
-server.express.use(cookieParser());
 server.express.use('/uploads', express.static('uploads'));
 
-server.express.use((req: any, res, next) => {
-  let { token } = req.cookies;
+server.express.use((req: Req, res, next) => {
+  let token = req.headers.authorization;
 
   if (token) {
     token = token.replace('Bearer ', '');
-    const { userId } = jwt.verify(token, process.env.APP_SECRET) as {
+    const { userId } = jwt.verify(token, APP_SECRET) as {
       userId: string;
     };
 
@@ -44,10 +42,10 @@ server.express.use((req: any, res, next) => {
 });
 
 const options = {
-  port: process.env.PORT,
+  port: PORT,
   cors: {
     credentials: true,
-    origin: process.env.FRONTEND_URL
+    origin: FRONTEND_URL
   }
 };
 

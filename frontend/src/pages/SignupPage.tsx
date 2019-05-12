@@ -3,16 +3,20 @@ import { Mutation, compose } from 'react-apollo';
 import { Alert, Typography, Form, Button, Input, message } from 'antd';
 
 import { IUser } from '../interfaces';
-import { SIGNUP_USER, CURRENT_USER_QUERY } from '../shared/queries';
+import { SIGNUP_USER } from '../shared/queries';
 import { FormComponentProps } from 'antd/lib/form';
 import { withRouter, RouteComponentProps } from 'react-router';
+import { AUTH_TOKEN } from '../shared/constants';
 
 const { Title } = Typography;
 
 interface IProps extends FormComponentProps, RouteComponentProps {}
 
 interface ISignupMutation {
-  signup: IUser;
+  signUp: {
+    user: IUser;
+    token: string;
+  };
 }
 
 const SignUp: React.FC<IProps> = ({ form, history }) => {
@@ -20,20 +24,27 @@ const SignUp: React.FC<IProps> = ({ form, history }) => {
     e.preventDefault();
     form.validateFields(async (err, variables) => {
       if (!err) {
-        const res = await createUser({
+        const { data } = await createUser({
           variables
         });
 
         message.success('You are signed up');
+        window.localStorage.setItem(AUTH_TOKEN, data.signUp.token);
         history.push('/');
       }
     });
   };
 
+  const _confirm = (token: string) => {
+    message.success('You are signed in');
+    window.localStorage.setItem(AUTH_TOKEN, token);
+    history.push('/');
+  };
+
   return (
     <Mutation<ISignupMutation>
       mutation={SIGNUP_USER}
-      refetchQueries={[{ query: CURRENT_USER_QUERY }]}
+      onCompleted={({ signUp: { token } }) => _confirm(token)}
     >
       {(createUser, { loading, error }) => (
         <Fragment>

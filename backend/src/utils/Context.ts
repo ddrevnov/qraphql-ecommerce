@@ -1,7 +1,7 @@
 import { Prisma } from 'prisma-binding';
 import { Request } from 'express';
 
-interface Req extends Request {
+export interface Req extends Request {
   userId?: string;
 }
 

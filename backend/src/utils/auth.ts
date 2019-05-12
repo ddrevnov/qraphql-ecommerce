@@ -1,17 +1,27 @@
 import * as jwt from 'jsonwebtoken';
+import * as bcrypt from 'bcryptjs';
+import { APP_SECRET } from '../config';
 
-const generateToken = (userId: string): string => {
-  return `Bearer ${jwt.sign({ userId }, process.env.APP_SECRET)}`;
+interface GenerateTokenInput {
+  userId: string;
+  secret?: string;
+  options?: jwt.SignOptions;
+}
+
+const generateToken = ({
+  userId,
+  secret = APP_SECRET,
+  options = {
+    expiresIn: 1000 * 60 * 60 * 24 * 365
+  }
+}: GenerateTokenInput): string => {
+  return jwt.sign({ userId }, secret, options);
 };
 
-const setCookie = (response: any, token: string): void => {
-  response.cookie('token', token, {
-    httpOnly: true,
-    maxAge: 1000 * 60 * 60 * 24 * 365 // 1 year cookie
-  });
-};
+const hashPassword = async (password: string) =>
+  await bcrypt.hash(password, 10);
 
 export default {
   generateToken,
-  setCookie
+  hashPassword
 };

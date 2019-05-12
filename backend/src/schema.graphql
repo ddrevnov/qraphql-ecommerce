@@ -20,13 +20,30 @@ type Mutation {
   createItem(data: ItemCreateInput!): Item!
   updateItem(data: ItemUpdateInput!, where: ItemWhereUniqueInput!): Item!
   deleteItem(where: ItemWhereUniqueInput!): Item
-  signUp(email: String!, password: String!, name: String!): User!
-  signIn(email: String!, password: String!): User!
-  signOut: SuccessMessage
+  signUp(email: String!, password: String!, name: String!): AuthResponse!
+  signIn(email: String!, password: String!): AuthResponse!
+  requestReset(email: String!): SuccessMessage
+  resetPassword(
+    resetToken: String!
+    password: String!
+    confirmPassword: String!
+  ): AuthResponse!
 }
 
 type SuccessMessage {
   message: String
+}
+
+type User {
+  id: ID!
+  name: String!
+  email: String!
+  permissions: [Permission]
+}
+
+type AuthResponse {
+  user: User!
+  token: String!
 }
 
 input ItemCreateInput {
