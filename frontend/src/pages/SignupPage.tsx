@@ -7,6 +7,7 @@ import { SIGNUP_USER } from '../shared/queries';
 import { FormComponentProps } from 'antd/lib/form';
 import { withRouter, RouteComponentProps } from 'react-router';
 import { AUTH_TOKEN } from '../shared/constants';
+import { hasErrors, getValidateStatus } from '../shared/utilities';
 
 const { Title } = Typography;
 
@@ -51,31 +52,37 @@ const SignUp: React.FC<IProps> = ({ form, history }) => {
           <Title level={2}>Sign Up</Title>
           {error && <Alert message="Server Error" type="error" />}
           <Form onSubmit={submit(createUser)}>
-            <Form.Item>
+            <Form.Item
+              validateStatus={getValidateStatus({ field: 'email', form })}
+            >
               {form.getFieldDecorator('email', {
                 rules: [{ required: true, message: 'Please input an email!' }],
                 initialValue: ''
               })(<Input placeholder="Email" />)}
             </Form.Item>
-            <Form.Item>
+            <Form.Item
+              validateStatus={getValidateStatus({ field: 'name', form })}
+            >
               {form.getFieldDecorator('name', {
                 rules: [{ required: true, message: 'Please input a name!' }],
                 initialValue: ''
               })(<Input placeholder="Name" />)}
             </Form.Item>
-            <Form.Item>
+            <Form.Item
+              validateStatus={getValidateStatus({ field: 'password', form })}
+            >
               {form.getFieldDecorator('password', {
                 rules: [
                   { required: true, message: 'Please input a password!' }
                 ],
                 initialValue: ''
-              })(<Input placeholder="Password" />)}
+              })(<Input.Password placeholder="Password" />)}
             </Form.Item>
             <Button
-              disabled={loading}
               loading={loading}
               type="primary"
               htmlType="submit"
+              disabled={loading || hasErrors(form.getFieldsError())}
             >
               Sign Up
             </Button>

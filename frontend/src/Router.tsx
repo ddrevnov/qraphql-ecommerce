@@ -6,7 +6,9 @@ import {
   ItemPage,
   AdminPage,
   SignupPage,
-  SigninPage
+  SigninPage,
+  ResetPasswordRequest,
+  ResetPassword
 } from './pages';
 
 const Router = () => {
@@ -18,6 +20,8 @@ const Router = () => {
       <Route path="/items" exact component={ItemsPage} />
       <Route path="/items/:id" exact component={ItemPage} />
       <Route path="/admin" component={AdminPage} />
+      <Route path="/resetPasswordRequest" component={ResetPasswordRequest} />
+      <Route path="/reset/:token" component={ResetPassword} />
     </Switch>
   );
 };

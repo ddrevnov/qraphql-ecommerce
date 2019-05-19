@@ -56,6 +56,10 @@ const Header: React.FC<RouteComponentProps> = ({ location, history }) => {
                 Sign Out
               </Menu.Item>
             )}
+
+            <Menu.Item key="resetPasswordRequest">
+              <NavLink to="/resetPasswordRequest">Reset Password</NavLink>
+            </Menu.Item>
           </Menu>
         </Layout.Header>
       )}

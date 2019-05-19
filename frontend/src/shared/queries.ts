@@ -141,3 +141,32 @@ export const SIGNIN_USER = gql`
     }
   }
 `;
+
+export const REQUEST_RESET = gql`
+  mutation REQUEST_RESET($email: String!) {
+    requestReset(email: $email) {
+      message
+    }
+  }
+`;
+
+export const RESET_PASSWORD = gql`
+  mutation RESET_PASSWORD(
+    $resetToken: String!
+    $password: String!
+    $confirmPassword: String!
+  ) {
+    resetPassword(
+      resetToken: $resetToken
+      password: $password
+      confirmPassword: $confirmPassword
+    ) {
+      user {
+        id
+        name
+        email
+      }
+      token
+    }
+  }
+`;
