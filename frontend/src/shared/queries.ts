@@ -1,5 +1,5 @@
-import gql from 'graphql-tag';
-import { perPage } from '../config';
+import gql from "graphql-tag";
+import { perPage } from "../config";
 
 /**
 |--------------------------------------------------
@@ -44,6 +44,17 @@ export const PAGINATION_QUERY = gql`
 export const CURRENT_USER_QUERY = gql`
   query {
     me {
+      id
+      email
+      name
+      permissions
+    }
+  }
+`;
+
+export const USERS_QUERY = gql`
+  query {
+    users {
       id
       email
       name
@@ -167,6 +178,20 @@ export const RESET_PASSWORD = gql`
         email
       }
       token
+    }
+  }
+`;
+
+export const UPDATE_PERMISSIONS_MUTATION = gql`
+  mutation UPDATE_PERMISSIONS_MUTATION(
+    $permissions: [Permission]!
+    $userId: ID!
+  ) {
+    updatePermissions(permissions: $permissions, userId: $userId) {
+      id
+      permissions
+      name
+      email
     }
   }
 `;

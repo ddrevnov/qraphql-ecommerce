@@ -1,9 +1,9 @@
-import * as bcrypt from 'bcryptjs';
-import * as jwt from 'jsonwebtoken';
+import * as bcrypt from "bcryptjs";
+import * as jwt from "jsonwebtoken";
 
-import { Context, auth, MailService } from '../../utils';
-import { User } from '../../generated/prisma-client';
-import { MAIL_HOST, FRONTEND_URL, RESET_TOKEN_SECRET } from '../../config';
+import { Context, auth, MailService } from "../../utils";
+import { User } from "../../generated/prisma-client";
+import { MAIL_HOST, FRONTEND_URL, RESET_TOKEN_SECRET } from "../../config";
 
 interface AuthResponse {
   user: User;
@@ -23,7 +23,7 @@ const signUp = async (
         password: hashedPassword,
         email,
         name,
-        permissions: { set: ['USER'] }
+        permissions: { set: ["USER"] }
       }
     },
     info
@@ -42,8 +42,7 @@ const signUp = async (
 const signIn = async (
   parent,
   { email, password },
-  { db, response }: Context,
-  info
+  { db }: Context,
 ): Promise<AuthResponse> => {
   const user = await db.query.user({
     where: {
@@ -58,7 +57,7 @@ const signIn = async (
   const valid = await bcrypt.compare(password, user.password);
 
   if (!valid) {
-    throw new Error('Invalid password');
+    throw new Error("Invalid password");
   }
 
   const token = auth.generateToken({
@@ -71,7 +70,7 @@ const signIn = async (
   };
 };
 
-const requestReset = async (parent, { email }, { response, db }: Context) => {
+const requestReset = async (parent, { email }, { db }: Context) => {
   const user = await db.query.user({ where: { email } });
 
   if (!user) {
@@ -90,20 +89,20 @@ const requestReset = async (parent, { email }, { response, db }: Context) => {
   await mailService.sendMail({
     from: MAIL_HOST,
     to: user.email,
-    subject: 'Reset password',
+    subject: "Reset password",
     html: `
       If you want to reset your password, please click this link:
       <a href="${FRONTEND_URL}/reset/${token}">Reset password</a>
     `
   });
 
-  return { message: 'Thanks' };
+  return { message: "Thanks" };
 };
 
 const resetPassword = async (
   parent,
   { password, confirmPassword, resetToken },
-  { response, db }: Context
+  { db }: Context
 ): Promise<AuthResponse> => {
   if (password !== confirmPassword) {
     throw new Error("your password don't match");
@@ -118,7 +117,7 @@ const resetPassword = async (
   });
 
   if (!user) {
-    throw new Error('This token is either invalid or expired');
+    throw new Error("This token is either invalid or expired");
   }
 
   const hashedPassword = await auth.hashPassword(password);

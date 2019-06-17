@@ -1,10 +1,10 @@
 export interface IUser {
-  id?: string;
+  id: string;
   name?: string;
   email?: string;
   password?: string;
   resetToken?: string;
   resetTokenExpiry?: number;
-  permissions?: string[];
+  permissions: string[];
   cart?: any[];
 }
